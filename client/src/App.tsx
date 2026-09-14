@@ -11,6 +11,7 @@ export const MyApi = new Api();
 export function App() {
 
     const [books, setBooks] = useState<Book[]>([])
+    const [newBookField, setNewBookField] = useState("");
 
     useEffect(() => {
         //call the API
@@ -27,6 +28,15 @@ export function App() {
                 return <div key={b.id}>Book title: {b.title}</div>
             })
         }
+        <input placeholder={"enter text for new book"} value={newBookField} onChange={e => setNewBookField(e.target.value)} />
+        <button onClick={() => {
+            MyApi.createBook.libraryCreateBook({title: newBookField})
+                .then(r => {
+                    MyApi.getBooks.libraryGetBooks().then(r => {
+                        setBooks(r)
+                    })
+            })
+        }}>Click to create book</button>
 
     </div>
   );

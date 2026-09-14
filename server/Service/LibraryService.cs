@@ -1,4 +1,5 @@
 ﻿using Infra;
+using LinqToDB;
 
 namespace Service;
 
@@ -7,7 +8,11 @@ public class LibraryService(MyDatabaseConnection db)
 
     public void Create(string title)
     {
-        throw new NotImplementedException();
+        db.Insert(new Book()
+        {
+            Id = Guid.NewGuid().ToString(),
+            Title = title
+        });
     }
 
     public List<Book> GetAll()
