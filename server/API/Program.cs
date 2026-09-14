@@ -1,12 +1,13 @@
 using Infra;
 using LinqToDB;
+using Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = "Data Source=db.db";
 var options = new DataOptions().UseSQLite(connectionString);
 var dataOptions = new DataOptions<MyDatabaseConnection>(options);
-
+builder.Services.AddScoped<LibraryService>();
 builder.Services.AddScoped<MyDatabaseConnection>(_ => new MyDatabaseConnection(dataOptions));
 
 builder.Services.AddControllers();
@@ -16,11 +17,15 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<MyDatabaseConnection>();
     db.CreateTable<Book>(tableOptions:TableOptions.CreateIfNotExists);
-    db.Insert(new Book()
+    if (db.Books.Count() == 0)
     {
-        Id = "1",
-        Title = "Bobs book"
-    });
+        db.Insert(new Book()
+        {
+            Id = "1",
+            Title = "Bobs book"
+        });
+    }
+  
 }
 
 app.MapControllers();
