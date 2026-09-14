@@ -12,9 +12,9 @@ public class LibraryController(LibraryService service) : ControllerBase
         return service.GetAll();
     }
     [HttpPost(nameof(CreateBook))]
-    public void CreateBook(string title)
+    public void CreateBook(CreateBookRequestDto dto)
     {
-         service.Create(title);
+         service.Create(dto);
     }
      [HttpPut(nameof(UpdateBook))]
     public void UpdateBook(UpdateBookRequestDto dto)

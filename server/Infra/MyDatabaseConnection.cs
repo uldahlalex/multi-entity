@@ -8,4 +8,5 @@ public class MyDatabaseConnection
     : DataConnection(options.Options)
 {
     public ITable<Book> Books => this.GetTable<Book>();
+    public ITable<Author> Authors => this.GetTable<Author>();
 }

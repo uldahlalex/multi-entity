@@ -23,14 +23,27 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<MyDatabaseConnection>();
     db.CreateTable<Book>(tableOptions:TableOptions.CreateIfNotExists);
+    db.CreateTable<Author>(tableOptions:TableOptions.CreateIfNotExists);
+    if (db.Authors.Count() == 0)
+    {
+        db.Insert(new Author()
+        {
+            AuthorId = "1",
+            AuthorName = "Bob"
+        });
+    }
     if (db.Books.Count() == 0)
     {
         db.Insert(new Book()
         {
             Id = "1",
-            Title = "Bobs book"
+            Title = "Bobs book",
+            AuthorId = "1"
         });
     }
+
+  
+    
   
 }
 
