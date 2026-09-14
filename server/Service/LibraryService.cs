@@ -1,4 +1,6 @@
-﻿using Infra;
+﻿using System.ComponentModel.DataAnnotations;
+using API;
+using Infra;
 using LinqToDB;
 
 namespace Service;
@@ -20,13 +22,19 @@ public class LibraryService(MyDatabaseConnection db)
        return db.Books.ToList();
     }
 
-    public void Update()
+    public void Update(UpdateBookRequestDto dto)
     {
-        throw new NotImplementedException();
+        var book = db.Books.FirstOrDefault(b => b.Id == dto.BookIdForLookup) ??
+                   throw new ValidationException("that book didnt exist");
+        if(dto.NewBookTitle!=null)
+            book.Title = dto.NewBookTitle;
+        db.Update(book);
     }
 
-    public void Delete()
+    public void Delete(string bookId)
     {
-        throw new NotImplementedException();
+        var book = db.Books.FirstOrDefault(b => b.Id == bookId) ??
+                   throw new ValidationException("that book didnt exist");
+        db.Delete(book);
     }
 }

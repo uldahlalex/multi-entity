@@ -1,10 +1,7 @@
-import { APITester } from "./APITester";
 import "./index.css";
-
-import logo from "./logo.svg";
-import reactLogo from "./react.svg";
 import {useEffect, useState} from "react";
 import {Api, type Book} from "@/api/Api.ts";
+import {BookComponent} from "@/BookComponent.tsx";
 
 export const MyApi = new Api();
 
@@ -25,7 +22,7 @@ export function App() {
     {/*    display books */}
         {
             books.map(b => {
-                return <div key={b.id}>Book title: {b.title}</div>
+                return <BookComponent b={b} setBooks={(books) => setBooks(books)} />
             })
         }
         <input placeholder={"enter text for new book"} value={newBookField} onChange={e => setNewBookField(e.target.value)} />

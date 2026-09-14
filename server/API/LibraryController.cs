@@ -17,13 +17,13 @@ public class LibraryController(LibraryService service) : ControllerBase
          service.Create(title);
     }
      [HttpPut(nameof(UpdateBook))]
-    public void UpdateBook()
+    public void UpdateBook(UpdateBookRequestDto dto)
     {
-        service.Update();
+        service.Update(dto);
     }
 [HttpDelete(nameof(DeleteBook))]
-    public void DeleteBook()
+    public void DeleteBook(string bookId)
     {
-        service.Delete();
+        service.Delete(bookId);
     }
 }

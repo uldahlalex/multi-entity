@@ -19,6 +19,16 @@ export interface LibraryCreateBookParams {
   title?: string;
 }
 
+export interface LibraryUpdateBookParams {
+  /** @minLength 1 */
+  BookIdForLookup?: string;
+  NewBookTitle?: string | null;
+}
+
+export interface LibraryDeleteBookParams {
+  bookId?: string;
+}
+
 export type QueryParamsType = Record<string | number, any>;
 export type ResponseFormat = keyof Omit<Body, "body" | "bodyUsed">;
 
@@ -325,10 +335,14 @@ export class Api<
      * @name LibraryUpdateBook
      * @request PUT:/UpdateBook
      */
-    libraryUpdateBook: (params: RequestParams = {}) =>
+    libraryUpdateBook: (
+      query: LibraryUpdateBookParams = {},
+      params: RequestParams = {},
+    ) =>
       this.request<void, any>({
         path: `/UpdateBook`,
         method: "PUT",
+        query: query,
         ...params,
       }),
   };
@@ -340,10 +354,14 @@ export class Api<
      * @name LibraryDeleteBook
      * @request DELETE:/DeleteBook
      */
-    libraryDeleteBook: (params: RequestParams = {}) =>
+    libraryDeleteBook: (
+      query: LibraryDeleteBookParams = {},
+      params: RequestParams = {},
+    ) =>
       this.request<void, any>({
         path: `/DeleteBook`,
         method: "DELETE",
+        query: query,
         ...params,
       }),
   };
