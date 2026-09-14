@@ -9,10 +9,15 @@ var options = new DataOptions().UseSQLite(connectionString);
 var dataOptions = new DataOptions<MyDatabaseConnection>(options);
 builder.Services.AddScoped<LibraryService>();
 builder.Services.AddScoped<MyDatabaseConnection>(_ => new MyDatabaseConnection(dataOptions));
-
+builder.Services.AddOpenApiDocument();
 builder.Services.AddControllers();
 
+
 var app = builder.Build();
+
+app.UseOpenApi();
+app.UseSwaggerUi();
+
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<MyDatabaseConnection>();
