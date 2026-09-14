@@ -1,28 +1,29 @@
 using Infra;
 using Microsoft.AspNetCore.Mvc;
+using Service;
 
 namespace API;
 
-public class LibraryController : ControllerBase
+public class LibraryController(LibraryService service) : ControllerBase
 {
     [HttpGet(nameof(GetBooks))]
     public List<Book> GetBooks()
     {
-        throw new NotImplementedException();
+        return service.GetAll();
     }
     [HttpPost(nameof(CreateBook))]
-    public void CreateBook()
+    public void CreateBook(string title)
     {
-        throw new NotImplementedException();
+         service.Create(title);
     }
      [HttpPut(nameof(UpdateBook))]
     public void UpdateBook()
     {
-        throw new NotImplementedException();
+        service.Update();
     }
 [HttpDelete(nameof(DeleteBook))]
     public void DeleteBook()
     {
-        throw new NotImplementedException();
+        service.Delete();
     }
 }
