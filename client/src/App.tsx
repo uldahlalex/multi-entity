@@ -4,15 +4,18 @@ import "./index.css";
 import logo from "./logo.svg";
 import reactLogo from "./react.svg";
 import {useEffect, useState} from "react";
+import {Api, type Book} from "@/api/Api.ts";
+
+export const MyApi = new Api();
 
 export function App() {
 
-    const [books, setBooks] = useState([])
+    const [books, setBooks] = useState<Book[]>([])
 
     useEffect(() => {
         //call the API
-        fetch('https://localhost:5000/getBooks').then(r => {
-
+        MyApi.getBooks.libraryGetBooks().then(r => {
+            setBooks(r)
         })
     }, []);
 
@@ -21,7 +24,7 @@ export function App() {
     {/*    display books */}
         {
             books.map(b => {
-                return <div>{b.Id}</div>
+                return <div key={b.id}>Book title: {b.title}</div>
             })
         }
 

@@ -11,10 +11,11 @@ builder.Services.AddScoped<LibraryService>();
 builder.Services.AddScoped<MyDatabaseConnection>(_ => new MyDatabaseConnection(dataOptions));
 builder.Services.AddOpenApiDocument();
 builder.Services.AddControllers();
-
+builder.Services.AddCors();
 
 var app = builder.Build();
 
+app.UseCors(config => config.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().SetIsOriginAllowed(_ => true));
 app.UseOpenApi();
 app.UseSwaggerUi();
 
