@@ -1,34 +1,30 @@
-%% Control flow: Controller -> Service -> Infra, exceptions -> global handler -> ProblemDetails -> client
 flowchart TD
-    Client["Client (React/TS)\nMyApi.updateBook.libraryUpdateBook(dto)"]
-    Controller["API layer\nLibraryController action\n(server/API/LibraryController.cs)"]
-    ServiceL["Service layer\nLibraryService method\n(server/Service/LibraryService.cs)"]
-    Infra["Infra layer\nMyDatabaseConnection (LinqToDB)\n(server/Infra/MyDatabaseConnection.cs)"]
+    Client["SPA (Client)\nsends a request"]
+    Controller["API layer\n(Controller)"]
+    Service["Service layer\n(business logic)"]
 
-    Client -->|"HTTP request"| Controller
-    Controller -->|"calls"| ServiceL
-    ServiceL -->|"query/command"| Infra
-    Infra -->|"row(s) or null"| ServiceL
+    Client --> Controller --> Service
 
-    ServiceL --> Valid{"Valid state?\ne.g. book/author found"}
-    Valid -->|"yes"| Success["Return value\n(void / entity / list)"]
-    Valid -->|"no"| Throw["throw ValidationException(...)\n(no local try/catch)"]
+    Service --> Check{"Something\nwrong?"}
 
-    Success --> Controller
-    Controller -->|"200 OK + JSON body"| ClientOk["Client: response.ok === true\nr.data = parsed JSON"]
-    ClientOk --> ThenBranch[".then(data => ...)\n(success control flow)"]
-    ThenBranch --> Client
+    Check -->|"no"| Ok["Return normal result"]
+    Ok --> Resp1["Response: 200 OK\n+ data"]
 
-    Throw -->|"bubbles up uncaught\nthrough Controller"| Pipeline["ASP.NET Core middleware\napp.UseExceptionHandler()"]
-    Pipeline --> Handler["MyExceptionHandler.TryHandleAsync\n(server/API/MyExceptionHandler.cs)"]
-    Handler -->|"writes JSON body"| ProblemDto["ProblemDetails DTO\n{ Title: exception.Message }\nHTTP status code"]
-    ProblemDto -->|"non-2xx response"| ClientErr["Client: response.ok === false\ncustomFetch throws parsed error data\n(client/src/api/Api.ts)"]
-    ClientErr --> CatchBranch[".catch(err => ...) / try-catch\n(error control flow, branches on status code)"]
-    CatchBranch --> Client
+    Check -->|"yes"| Throw["throw Exception"]
+    Throw --> Handler["Global exception handler\n(catches it in one place)"]
+    Handler --> Resp2["Response: error status code\n+ ProblemDetails (error DTO)"]
+
+    Resp1 --> ClientHandle["Client receives response"]
+    Resp2 --> ClientHandle
+
+    ClientHandle --> Status{"Status code\nOK?"}
+    Status -->|"yes"| Then[".then() / try-block\nuse the data"]
+    Status -->|"no"| Catch[".catch() / catch-block\nshow the error"]
 
     style Throw fill:#5c1a1a,stroke:#f87171,color:#fca5a5
     style Handler fill:#4a3b0a,stroke:#facc15,color:#fde68a
-    style ProblemDto fill:#4a3b0a,stroke:#facc15,color:#fde68a
-    style CatchBranch fill:#5c1a1a,stroke:#f87171,color:#fca5a5
-    style Success fill:#14532d,stroke:#4ade80,color:#bbf7d0
-    style ThenBranch fill:#14532d,stroke:#4ade80,color:#bbf7d0
+    style Resp2 fill:#4a3b0a,stroke:#facc15,color:#fde68a
+    style Catch fill:#5c1a1a,stroke:#f87171,color:#fca5a5
+    style Ok fill:#14532d,stroke:#4ade80,color:#bbf7d0
+    style Resp1 fill:#14532d,stroke:#4ade80,color:#bbf7d0
+    style Then fill:#14532d,stroke:#4ade80,color:#bbf7d0
