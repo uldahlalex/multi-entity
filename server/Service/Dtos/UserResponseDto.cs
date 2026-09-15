@@ -1,4 +1,4 @@
-namespace API;
+namespace Service.Dtos;
 
 public class UserResponseDto
 {

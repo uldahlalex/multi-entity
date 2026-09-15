@@ -1,7 +1,7 @@
 using Facet;
 using Infra.Entities;
 
-namespace API;
+namespace Service.Dtos;
 
 [Facet(typeof(Author), nameof(Author.Books))]
 public partial class AuthorDto

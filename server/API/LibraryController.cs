@@ -1,8 +1,10 @@
+using System.ComponentModel.DataAnnotations;
 using Infra;
 using Infra.Entities;
 using LinqToDB;
 using Microsoft.AspNetCore.Mvc;
 using Service;
+using Service.Dtos;
 
 namespace API;
 
@@ -33,8 +35,10 @@ public class LibraryController(LibraryService service, MyDatabaseConnection dbc)
     }
 
     [HttpGet(nameof(GetUsers))]
-    public List<UserResponseDto> GetUsers()
+    public List<UserResponseDto> GetUsers(int count)
     {
+        if (count < 0)
+            throw new ValidationException("Count cannot be less than 0");
         return new List<User>
         {
             new()
@@ -50,7 +54,7 @@ public class LibraryController(LibraryService service, MyDatabaseConnection dbc)
     }
 
     [HttpGet(nameof(GetAuthors))]
-    public List<AuthorDto> GetAuthors()
+    public List<Service.Dtos.AuthorDto> GetAuthors()
     {
         //Validering
 
@@ -58,9 +62,9 @@ public class LibraryController(LibraryService service, MyDatabaseConnection dbc)
         var listOfAuthors = dbc
             .Authors
             .LoadWith(a => a.Books)
-            .Select(a => new AuthorDto(a)
+            .Select(a => new Service.Dtos.AuthorDto(a)
             {
-                Books = a.Books.Select(b => new BookDto(b)).ToList()
+                Books = a.Books.Select(b => new Service.Dtos.BookDto(b)).ToList()
             })
             .ToList();
 

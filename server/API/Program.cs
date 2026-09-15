@@ -12,11 +12,14 @@ builder.Services.AddScoped<LibraryService>();
 builder.Services.AddScoped<MyDatabaseConnection>(_ => new MyDatabaseConnection(dataOptions));
 builder.Services.AddScoped<MySeeder>();
 builder.Services.AddOpenApiDocument();
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<MyExceptionHandler>();
 builder.Services.AddControllers();
 builder.Services.AddCors();
 
 var app = builder.Build();
 
+app.UseExceptionHandler();
 app.UseCors(config => config.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().SetIsOriginAllowed(_ => true));
 app.UseOpenApi();
 app.UseSwaggerUi();

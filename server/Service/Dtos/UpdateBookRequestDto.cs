@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Service;
+namespace Service.Dtos;
 
 public class UpdateBookRequestDto
 {

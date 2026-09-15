@@ -2,6 +2,7 @@
 using Infra;
 using Infra.Entities;
 using LinqToDB;
+using Service.Dtos;
 
 namespace Service;
 
