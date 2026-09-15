@@ -12,7 +12,7 @@ flowchart TD
 
     Check -->|"yes"| Throw["throw Exception"]
     Throw --> Handler["Global exception handler\n(catches it in one place)"]
-    Handler --> Resp2["Response: error status code\n+ ProblemDetails (error DTO)"]
+    Handler --> Resp2["Response: error status code\n+ ProblemDetails (error object)"]
 
     Resp1 --> ClientHandle["Client receives response"]
     Resp2 --> ClientHandle
